@@ -1,0 +1,814 @@
+/* --- Core Logic --- */
+.hidden { display: none !important;
+  overflow: hidden;
+}
+
+/* --- GLOBAL & UTILITY --- */
+body {
+  margin: 0; height: 100vh; display: flex; justify-content: center;
+  align-items: center; background-color: #ffe4e1;
+  font-family: 'Segoe UI', sans-serif; overflow: hidden;
+}
+
+/* --- NEW ROMANTIC FONT STYLES --- */
+#yay-header {
+  font-family: 'Great Vibes', cursive; /* Extra curly and romantic */
+  font-size: 3rem;
+  color: #d63384;
+  margin-bottom: 10px;
+}
+
+#date-invite p {
+  font-family: 'Dancing Script', cursive; /* Elegant handwriting */
+  font-size: 1.8rem;
+  color: #4a4a4a;
+  max-width: 320px;
+  margin: 0 auto 20px auto;
+}
+
+/* Update the "I'd love to!" button to match the vibe */
+#start-date-btn {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.4rem;
+  padding: 10px 30px;
+}
+
+.container {
+  text-align: center; width: 90%; max-width: 400px;
+  position: relative;
+  z-index: 10; /* Keeps the buttons on a layer above the background */
+  pointer-events: auto; /* Ensures clicks work here */
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#options-wrapper {
+  display: flex;
+  flex-direction: column; /* This centers the buttons horizontally */
+  align-items: center;
+  justify-content: center;
+  gap: 15px; /* This adds space between the buttons */
+  margin: 30px auto;
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.6); /* Soft frosted glass card */
+  border-radius: 25px;
+  border: 2px dashed #ffb3c1;
+  max-width: 320px;
+  z-index: 100 !important;
+  pointer-events: auto !important;
+}
+
+/* Centering the question text above the buttons */
+#date-screen h2 {
+  font-family: 'Dancing Script', cursive;
+  font-size: 2.2rem;
+  color: #d63384;
+  text-align: center;
+  margin-bottom: 10px;
+  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.5);
+}
+
+#date-question-text {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.4rem;
+  color: #ff4d6d;
+  text-align: center;
+  max-width: 300px;
+  margin: 0 auto 20px auto;
+  line-height: 1.4;
+}
+
+/* --- Photos & Animations --- */
+#valentine-img, #location-img, .clickable-glow {
+  width: 100%; max-width: 300px; height: auto;
+  border-radius: 20px; border: 8px solid white;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.fade-in { animation: fadeIn 0.8s ease-in forwards; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to {
+  opacity: 1; transform: translateY(0); } }
+
+/* --- Map Zoom --- */
+#map-circle {
+  width: 80px; height: 80px; background: white; border: 4px solid #ff4d6d;
+  border-radius: 50%; margin: 20px auto; display: flex;
+  align-items: center; justify-content: center; font-size: 40px;
+  animation: mapZoom 1.5s ease-in-out;
+}
+
+@keyframes mapZoom { 0% { transform: scale(0); } 50% { transform: scale(1.3); }
+  100% { transform: scale(1); } }
+
+/* --- Buttons --- */
+button { padding: 12px 25px; border-radius: 50px; border: none; font-weight:
+  bold; cursor: pointer; margin: 10px; }
+.yes-btn { background: #ff4d6d; color: white; transition: transform 0.3s
+  cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 1000; white-space: nowrap; box-shadow: 0 5px 15px rgba(255, 77,
+  109, 0.4); }
+#no-btn { background: #6c757d; color: white; transition: left 0.2s ease, top
+  0.2s ease; /* Makes the "run away" look smoother */
+  z-index: 999; }
+
+.choice-btn {
+  width: 220px; /* Makes all buttons the same width */
+  background: white !important;
+  color: #d63384 !important;
+  border: 2px solid #ff4d6d !important;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.3rem;
+  padding: 10px 20px;
+  border-radius: 50px;
+  transition: all 0.3s ease;
+  cursor: pointer !important; /* Changed from 'none' so she can actually
+  click easily */
+  z-index: 101 !important;
+  pointer-events: auto !important;
+}
+
+.choice-btn:hover {
+  background: #ff4d6d !important;
+  color: white !important;
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+}
+
+/* --- Gift Box --- */
+#gift-box {
+  width: 100px;
+  height: 100px;
+  background: #ff4d6d; /* Box color */
+  margin: 30px auto;
+  position: relative;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 0 10px rgba(255, 77, 109, 0.5));
+}
+
+/* The Ribbon (Vertical) */
+#gift-box::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 20px;
+  height: 100%;
+  background: #ffd700; /* Gold ribbon */
+  z-index: 1;
+}
+
+/* The Box Lid */
+.gift-lid {
+  width: 110px;
+  height: 25px;
+  background: #d63384;
+  position: absolute;
+  top: -10px;
+  left: -5px;
+  border-radius: 4px;
+  z-index: 3;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* The Bow on top */
+.gift-lid::after {
+  content: "🎀";
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 2rem;
+}
+
+/* Shake animation when hovering */
+#gift-box:hover {
+  transform: scale(1.05);
+}
+
+#gift-box:hover .gift-lid {
+  transform: translateY(-10px) rotate(-2deg);
+}
+
+/* --- THE FIXED HEART LOADER --- */
+#loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+
+  /* Ensure no background or padding is here */
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  border: none !important;
+  padding: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+}
+
+.loader-heart {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background-color: #ff4d6d;
+  transform: rotate(-45deg);
+  animation: heartbeat 1.2s infinite;
+  /* This ensures the point of the heart stays centered */
+  margin: 30px auto;
+}
+
+/* These create the rounded tops of the heart */
+.loader-heart::before,
+.loader-heart::after {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background-color: #ff4d6d;
+  border-radius: 50%;
+}
+
+/* Position the left circle */
+.loader-heart::before {
+  top: -25px;
+  left: 0;
+}
+
+/* Position the right circle */
+.loader-heart::after {
+  left: 25px;
+  top: 0;
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1) rotate(-45deg); }
+  15% { transform: scale(1.2) rotate(-45deg); }
+  30% { transform: scale(1) rotate(-45deg); }
+  45% { transform: scale(1.1) rotate(-45deg); }
+  100% { transform: scale(1) rotate(-45deg); }
+}
+
+.loader-text {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.5rem;
+  color: #d63384;
+}
+
+/* --- Floating Hearts Background --- */
+#heart-cursor {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  font-size: 24px;
+  will-change: transform; /* Tells the browser to optimize this movement */
+  transition: none !important;
+  transform: translate(-50%, -50%);
+}
+
+.bg-hearts {
+  position: fixed;
+  pointer-events: none;
+  top: 0; left: 0; width: 100%; height: 100%;
+  z-index: -1;
+  background: linear-gradient(#ffe4e1, #ffb3c1);
+}
+
+/* --- Heart Shapes --- */
+.heart-shape {
+  position: absolute;
+  background-color: rgba(255, 77, 109, 0.5);
+  transform: rotate(-45deg);
+  animation: floatUp var(--duration) linear infinite;
+}
+
+.heart-shape::before, .heart-shape::after {
+  content: "";
+  background-color: inherit;
+  border-radius: 50%;
+  height: 100%; width: 100%;
+  position: absolute;
+}
+
+.heart-shape::before { top: -50%; left: 0; }
+.heart-shape::after { left: 50%; top: 0; }
+
+@keyframes floatUp {
+  0% { transform: translateY(100vh) rotate(-45deg) scale(0); opacity: 0; }
+  20% { opacity: 1; }
+  100% { transform: translateY(-10vh) rotate(-45deg) scale(1); opacity: 0; }
+}
+
+/* --- Smooth Transitions for Cards --- */
+#main-card, #success-screen, #date-screen, #gift-section {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  border-radius: 30px;
+  box-shadow: 0 15px 35px rgba(214, 51, 132, 0.2);
+  animation: slideIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: scale(0.8) translateY(30px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* --- Image Glow & Entrance --- */
+#location-img, #valentine-img {
+  transition: transform 0.3s ease;
+  animation: imgPop 0.8s ease-out;
+}
+
+@keyframes imgPop {
+  0% { transform: scale(0); }
+  70% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* --- THE BOARDING PASS --- */
+.boarding-pass {
+  background: #ffffff;
+  width: 310px;
+  margin: 20px auto;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 15px 45px rgba(255, 77, 109, 0.3);
+  border: 2px solid #ffb3c1;
+  position: relative;
+  /* Entrance animation */
+  animation: ticketEntrance 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes ticketEntrance {
+  0% { transform: translateY(50px) scale(0.7); opacity: 0; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.ticket-header {
+  background: #ff4d6d;
+  color: white;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  letter-spacing: 1px;
+}
+
+.ticket-body {
+  padding: 25px 20px;
+  background-image: radial-gradient(#fff5f7 10%, transparent 10%);
+  background-size: 15px 15px; /* Subtle pattern */
+}
+
+.ticket-destination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 15px;
+  border-top: 1px dashed #ffb3c1;
+  padding-top: 15px;
+}
+
+.plane-icon {
+  font-size: 1.8rem;
+  animation: flightWobble 2s infinite ease-in-out;
+}
+
+@keyframes flightWobble {
+  0%, 100% { transform: rotate(0deg) translateX(-5px); }
+  50% { transform: rotate(-10deg) translateX(5px); }
+}
+
+.ticket-footer {
+  background: #fdf2f4;
+  padding: 10px;
+  font-size: 0.8rem;
+  color: #ff4d6d;
+  font-weight: bold;
+}
+
+.polaroid-frame {
+  background: white;
+  padding: 15px 15px 40px 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  border-radius: 5px;
+  transform: rotate(-2deg);
+  display: inline-block;
+  margin: 20px 0;
+  animation: photoPop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#location-img {
+  width: 300px;
+  height: auto;
+  display: block;
+}
+
+@keyframes photoPop {
+  from { transform: scale(0) rotate(10deg); }
+  to { transform: scale(1) rotate(-2deg); }
+}
+
+/* --- PULSING NEXT BUTTON --- */
+.pulse-btn {
+  background: linear-gradient(45deg, #ff4d6d, #ff85a1);
+  color: white !important;
+  border: none;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.4rem;
+  padding: 15px 30px;
+  border-radius: 50px;
+  box-shadow: 0 4px 15px rgba(255, 77, 109, 0.3);
+  animation: pulse 2s infinite;
+  cursor: none; /* Keeps heart cursor visible */
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 109, 0.7); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 77, 109,
+0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 109, 0); }
+}
+
+/* --- Heart GAme --- */
+#game-screen {
+  position: relative;
+  z-index: 1000; /* Put it above everything */
+  min-height: 450px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#game-area {
+  position: relative;
+  width: 100%;
+  height: 300px; /* Give the hearts a 300px tall window to fly in */
+  overflow: visible; /* Let them fly! */
+  background: rgba(255, 255, 255, 0.2); /* Light tint so you see the area */
+  border-radius: 20px;
+}
+
+.catchable-heart {
+  position: absolute;
+  font-size: 50px;
+  cursor: pointer;
+  z-index: 1100;
+  user-select: none;
+  /* Speed up from 4s to 1.5s or 2s for difficulty */
+  animation: heartWarp 3s infinite ease-in-out;
+  filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.6));
+  padding: 20px; /* THis makes the "clickable area" larger than the heart
+itself! */
+  margin: -20px;
+}
+
+#counter {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.6rem;
+  color: #ffffff;
+  background: #ff4d6d; /* Solid background so numbers are visible */
+  padding: 5px 20px;
+  border-radius: 50px;
+  display: inline-block;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+}
+
+#reason-popup {
+  position: fixed; /* Fixes it to the screen, not the div */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  border: 4px solid #ff4d6d;
+  box-shadow: 0 0 50px rgba(214, 51, 132, 0.4);
+  z-index: 2000; /* Higher than the hearts! */
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.8rem;
+  color: #d63384;
+  text-align: center;
+  min-width: 250px;
+}
+
+@keyframes heartWarp {
+  0% {
+transform: translateY(400px) translateX(0) scale(1);
+    opacity: 0;
+  }
+  25% {
+transform: translateY(300px) translateX(40px) scale(1.2);
+    opacity: 1;
+  }
+  50% {
+transform: translateY(200px) translateX(-40px) scale(0.9);
+  }
+  75% {
+transform: translateY(100px) translateX(40px) scale(1.1);
+  }
+  100% {
+transform: translateY(-100px) translateX(0) scale(1);
+    opacity: 0;
+  }
+}
+
+/* --- SCRAPBOOK PHOTO REVEAL --- */
+.scrapbook-container {
+  perspective: 1000px;
+  margin-top: 20px;
+}
+
+.memory-frame {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 25px rgba(255, 77, 109, 0.5); /* Romantic pink glow */
+  border: 1px solid #ffb3c1;
+  display: inline-block;
+  position: relative;
+  animation: scrapbookOpen 1.2s ease-out;
+  filter: sepia(0);
+}
+
+#scrapbook-photo {
+  width: 280px;
+  height: auto;
+  border-radius: 5px;
+  display: block;
+  filter: sepia(0.3) contrast(1.1); /* Gives it a warm, nostalgic film look
+*/
+  transition: filter 0.5s ease;
+}
+
+.memory-frame:hover #scrapbook-photo {
+  filter: sepia(0) contrast(1.1); /* Clears up on hover */
+}
+
+.photo-caption {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.4rem;
+  color: #ff4d6d;
+  margin-top: 10px;
+}
+
+/* Play button overlay that appears on the photo */
+.play-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* This perfectly centers it */
+  background: rgba(255, 105, 180, 0.8); /* Semi-transparent pink */
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.memory-frame:hover .play-overlay {
+  transform: translate(-50%, -50%) scale(1.1);
+  background: rgba(255, 77, 109, 1);
+}
+
+.play-triangle {
+  width: 0;
+  height: 0;
+  border-top: 15px solid transparent;
+  border-bottom: 15px solid transparent;
+  border-left: 25px solid white; /* The white 'Play' arrow */
+  margin-left: 5px; /* Tiny nudge to look visually centered */
+}
+
+.play-overlay:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  background: rgba(255, 20, 147, 1); /* Brightens on hover */
+}
+
+@keyframes scrapbookOpen {
+  from { transform: rotateY(-90deg); opacity: 0; }
+  to { transform: rotateY(0deg); opacity: 1; }
+}
+
+.petal {
+  position: absolute;
+  background: #ffb3c1; /* Soft rose pink */
+  border-radius: 150% 0 150% 0; /* Creates a petal/leaf shape */
+  top: -20px;
+  z-index: -1;
+  opacity: 0.8;
+  box-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+  animation: petalFall linear infinite;
+}
+
+@keyframes petalFall {
+  0% {
+    transform: translateY(0) rotate(0deg) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  90% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(110vh) rotate(720deg) translateX(100px);
+    opacity: 0;
+  }
+}
+
+/* --- THE CLEAN POLAROID STACK --- */
+#location-preview {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  width: 100vw !important;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* THE SCRAPBOOK ROW */
+#photo-stack {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 20px !important;
+  margin: 30px auto !important;
+  flex-wrap: nowrap !important;
+  perspective: 1000px; /* Essential for the 3D zoom feel */
+}
+
+/* THE POLAROID ZOOM & DESIGN */
+.stacked-photo {
+  background: white !important;
+  padding: 10px 10px 35px 10px !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
+  width: 150px !important;
+  height: 190px !important;
+  flex-shrink: 0 !important;
+  border-radius: 2px;
+  cursor: pointer;
+
+  /* ENTRANCE ANIMATION: This creates the "Pop" */
+  animation: polaroidPop 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275)
+forwards;
+  opacity: 0; /* Start hidden for the animation */
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.stacked-photo img {
+  width: 100% !important;
+  height: 140px !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+/* STAGGERED ZOOM: Each photo pops in at a different time */
+.photo-left {
+  animation-delay: 0.2s;
+  --rotate-deg: -7deg;
+}
+
+.photo-center {
+  animation-delay: 0.4s;
+  --rotate-deg: 2deg;
+}
+
+.photo-right {
+  animation-delay: 0.6s;
+  --rotate-deg: 7deg;
+}
+
+/* THE ZOOM KEYFRAME */
+@keyframes polaroidPop {
+  0% { transform: scale(0) rotate(0deg); opacity: 0; }
+  100% { transform: scale(1) rotate(var(--rotate-deg)); opacity: 1; }
+}
+
+/* THE HOVER ZOOM: Makes it interactive */
+.stacked-photo:hover {
+  transform: scale(1.15) rotate(0deg) translateY(-15px) !important;
+  z-index: 100 !important;
+  box-shadow: 0 20px 40px rgba(214, 51, 132, 0.3) !important;
+}
+
+/* --- NEW: CAPTION REVEAL LOGIC --- */
+.stacked-photo .caption {
+  position: absolute;
+  bottom: 5px; /* Sits in the white bottom margin of the polaroid */
+  left: 0;
+  width: 100%;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.1rem;
+  color: #d63384;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+/* Show caption when hovering over the photo */
+.stacked-photo:hover .caption {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Optional: Make image slightly focus-blur when caption appears */
+.stacked-photo:hover img {
+  filter: brightness(0.95);
+}
+
+/* --- MOBILE OPTIMIZATION --- */
+@media (max-width: 480px) {
+  .stacked-photo {
+    width: 100px !important;
+    height: 140px !important;
+    padding: 5px 5px 20px 5px !important;
+  }
+  .stacked-photo img { height: 90px !important; }
+  #photo-stack { gap: 10px !important; }
+}
+
+/* --- ROSE PETALS (Cleaned Up) --- */
+@keyframes petalFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.8; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+#final-message-card {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 40px 20px;
+  border-radius: 30px;
+  box-shadow: 0 20px 50px rgba(214, 51, 132, 0.3);
+  border: 3px double #ffb3c1;
+}
+
+.final-text {
+  font-family: 'Great Vibes', cursive;
+  font-size: 2.5rem;
+  color: #d63384;
+}
+
+.final-subtext {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.5rem;
+  color: #4a4a4a;
+}
+
+.signature {
+  margin-top: 20px;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.2rem;
+  color: #ff4d6d;
+  font-weight: bold;
+}
+
+.confetti-heart {
+  position: fixed;
+  font-size: 20px;
+  top: -20px;
+  z-index: 9999;
+  user-select: none;
+  pointer-events: none;
+  animation: confettiFall linear forwards;
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
+
+#final-message-card button {
+  background: #fff0f3;
+  color: #ff4d6d;
+  border: 1px solid #ffb3c1;
+  border-radius: 20px;
+  padding: 8px 20px;
+  font-family: 'Dancing Script', cursive;
+  cursor: pointer;
+  margin-top: 15px;
+transition: 0.3s;
+}
+
+#final-message-card button:hover {
+background: #ff4d6d;
+color: white;
+}
+
