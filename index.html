@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Be My Valentine? 💖</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&display=swap" rel="stylesheet">
+</head>
+
+  <body>
+  <div id="heart-cursor">❤️</div>
+  <div class="bg-hearts" id="heart-bg"></div>
+
+  <div class="container">
+    <div id="main-card">
+      <div class="photo-container">
+        <img id="valentine-img" src="https://iili.io/fytCkDx.md.jpg" alt="Valentine Photo">
+      </div>
+      <h1 id="question">Will you be my Lady this Valentine's Day? ❤️</h1>
+      <p id="pity-message"></p>
+      <div class="button-group">
+        <button id="yes-btn">YES</button>
+        <button id="no-btn">NO</button>
+      </div>
+    </div>
+
+    <div id="success-screen" class="hidden">
+  <h1 id="yay-header">Yay! I knew you'd say yes!</h1>
+  <div id="date-invite">
+    <p>Since you said yes... Would you like to go on a little virtual date with me right now?</p>
+    <button id="start-date-btn" class="choice-btn">I'd love to!</button>
+  </div>
+</div>
+<div id="date-screen" class="hidden">
+  <h2 id="date-question">Where should we go for our virtual dinner? ¡l</h2>
+  <p id="date-question-text" style="text-align: center; color: #ff4d6d; font-
+family: 'Dancing Script', cursive; font-size: 1.2rem;">Pick a place you'd love to
+visit...</p>
+</div>
+<div id="map-container" class="hidden">
+  <div class="boarding-pass">
+    <div class="ticket-header">
+      <span>VALENTINE AIRWAYS</span>
+      <span id="flight-no">FLIGHT 214</span>
+    </div>
+    <div class="ticket-body">
+      <div class="ticket-info">
+        <small>PASSENGER</small>
+        <strong>My Beautiful Lady</strong>
+      </div>
+      <div class="ticket-destination">
+        <div><small>FROM</small><strong>CEBU</strong></div>
+        <div class="plane-icon"></div>
+        <div><small>TO</small><strong id="ticket-dest">DESTINATION</strong>
+        </div>
+      </div>
+      <div class="ticket-footer">
+        <p id="traveling-text">Boarding now...</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="location-preview" class="hidden">
+  <h2 id="location-heading"></h2>
+  <div id="photo-stack"></div>
+  <button id="dessert-btn" class="pulse-btn hidden" style="margin-top:
+20px;">
+    Everything looks yummy! Dessert next?
+  </button>
+</div>
+
+    <div id="options-wrapper" class="date-options">
+  <button class="choice-btn" onclick="nextStep('Italy', 'IT',
+  ['https://img1.wsimg.com/isteam/ip/d9de8cd2-20ed-4321-b7db-e46e82be8bea/a9e9842a-
+65e2-49bf-97b0-9d5e59de10c5.jpeg', 'https://cinquecentopizzeria.com/wp-
+content/uploads/2021/11/italian-food-1.jpg',
+  'https://www.emperortraveline.com/wp-content/uploads/2022/09/Italy.jpg'])">
+    Italian Bistro
+  </button>
+  <button class="choice-btn" onclick="nextStep('Paris', 'FR',
+  ['https://media.timeout.com/images/106251733/image.jpg',
+  'https://media.timeout.com/images/106274077/750/562/image.jpg',
+  'https://images.squarespace-
+cdn.com/content/v1/65d5b7ad43a47e6130a89ea7/1740469206144-
+0TTATIF1670M7HC5FZGH/ddScreenshot+2025-02-25+at+16.30.jpg'])">
+    Parisian Café
+  </button>
+  <button class="choice-btn" onclick="nextStep('Japan', 'JP',
+  ['https://sushibarhospitality.com/wp-content/uploads/2025/04/banner-atx4.webp',
+  'https://assets.simpleviewinc.com/simpleview/image/upload/c_fit,w_1440,h_900/crm/
+miamifl/Blue-Ribbon-Sushi-Bar---Grill-1-1440x900-96e73eae5056a36_96e73fac-5056-
+a36a-0b01aefae62b7a60.jpg',
+  'https://hbhimg.mmtcdn.com/content/hubble/img/Japan/mmt/activities/m_Japan_2-
+min_l_605_1000.jpg'])">
+    Sushi Bar
+  </button>
+</div>
+
+<div id="game-screen" class="hidden">
+  <h2 id="game-instruction">Catch 3 floating hearts to reveal my secrets...</h2>
+  <div id="counter">Hearts Caught: <span id="score">0</span>/3</div>
+  <div id="game-area"></div>
+  <div id="reason-popup" class="hidden"></div>
+</div>
+
+<div id="loader" class="hidden">
+  <div class="loader-heart"></div>
+  <p class="loader-text">Preparing your surprise...</p>
+</div>
+
+<div id="final-reveal" class="hidden">
+  <h3 id="gift-content"></h3>
+  <div class="scrapbook-container">
+    <div class="memory-frame">
+      <div style="position: relative; display: inline-block;">
+        <video id="scrapbook-video" width="100%"
+poster="https://www.dropbox.com/scl/fi/3dg2kv4ir0acwvaxcpby/Screenshot_2026-02-
+14-21-38-45-40_99c04817c0de5652397fc8b56c3b3817-1.jpg?
+rlkey=fsibx195g5husrubrrhhopp4q&st=2j7asnhmdl=1" controls>
+          <source
+src="https://www.dropbox.com/scl/fi/t7hqaxjcgfmeb3olr572r/Messenger_creation_13AA
+728B-9713-433e-9860-2112939717F8.mp4?
+rlkey=zdqqwc6qeb5mz pymnc229lq9c&st=hkcjwdlmsdl=1" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <p class="photo-caption">Our favorite moment...</p>
+    </div>
+  </div>
+</div>
+
+    <audio id="valentine-music" loop>
+  <source src="https://www.dropbox.com/scl/fi/58jw6a9cz9d317wsjm7g7/music.mp3?rlkey=u3xbb2r73h441lp3pe72129g5&st=hz8n08cf&dl=1" type="audio/mpeg">
+
+
+<audio id="final-song" loop>
+  <source src="https://www.dropbox.com/scl/fi/8v37ol7lsq2c49racysrt/ssstik.io_1771076781282.mp3?rlkey=2egzktgfrof9y6ht9qtdjn5eu&st=xq39eh8w&dl=1" type="audio/mpeg">
+
+
+<script src="script.js"></script>
+</body>
+</html>
+  
